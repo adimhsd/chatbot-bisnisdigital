@@ -1,39 +1,93 @@
-import { useChat } from 'ai/react';
-import { Message } from 'ai';
+import { useState, useRef } from 'react';
 import ChatWindow from '@/components/ChatWindow';
 import ChatInput from '@/components/ChatInput';
 import Navbar from '@/components/Navbar';
 
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
 export default function Home() {
-  const { messages, input, handleInputChange, append, isLoading } = useChat({
-    api: '/api/chat',
-  });
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSendMessage = async (userMessage: string) => {
-    await append({
+    // 1. Add User Message
+    const userMsgId = Date.now().toString();
+    const newUserMessage: Message = {
+      id: userMsgId,
       role: 'user',
       content: userMessage,
-    });
-  };
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, newUserMessage]);
+    setIsLoading(true);
 
-  // Map ai/react messages to the format expected by ChatWindow
-  // useChat messages have 'createdAt', ChatWindow expects 'timestamp'
-  const uiMessages = messages.map((m: Message) => ({
-    id: m.id,
-    role: m.role as 'user' | 'assistant',
-    content: m.content,
-    timestamp: m.createdAt || new Date(),
-  }));
+    try {
+      // 2. Prepare for Assistant Message
+      const assistantMsgId = (Date.now() + 1).toString();
+      const assistantMessage: Message = {
+        id: assistantMsgId,
+        role: 'assistant',
+        content: '', // Start empty
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      // 3. Send Request
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [
+            ...messages.map((m) => ({ role: m.role, content: m.content })),
+            { role: 'user', content: userMessage },
+          ],
+        }),
+      });
+
+      if (!response.ok) throw new Error(response.statusText);
+      if (!response.body) throw new Error('No response body');
+
+      // 4. Handle Streaming
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+      let accumulatedContent = '';
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        const chunkValue = decoder.decode(value || new Uint8Array(), { stream: !done });
+
+        // Vercel AI SDK streamText usually sends raw text chunks or protocol text.
+        // If it's pure text stream (which streamText default often is with .toTextStreamResponse()):
+        accumulatedContent += chunkValue;
+
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantMsgId
+              ? { ...msg, content: accumulatedContent }
+              : msg
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Streaming error:', error);
+      // Optional: Add error message to chat
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen w-full bg-gray-50 dark:bg-slate-900">
       <Navbar />
-
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6 flex flex-col overflow-hidden">
-        <ChatWindow messages={uiMessages} />
-        {/* ChatInput expects onSendMessage but we can just pass a wrapper around append. 
-            Ideally ChatInput should use handleInputChange too but we can keep its internal state for now 
-            to minimize changes. */}
+        <ChatWindow messages={messages} />
         <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
       </main>
     </div>
