@@ -1,0 +1,14 @@
+{
+  "hosting": {
+    "site": "chatbot-bisnisdigitaluniku",
+    "cleanUrls": true,
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "functions": {
+    "source": "functions"
+  }
+}

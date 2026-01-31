@@ -1,0 +1,70 @@
+# --- DEPENDENCIES (node_modules) ---
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+bower_components
+.npm
+
+# --- NEXT.JS SPECIFIC ---
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+.vercel
+
+# --- FIREBASE SPECIFIC ---
+.firebase/
+firebase-debug.log*
+firebase-debug.*.log*
+.dataconnect
+
+# --- ENVIRONMENT VARIABLES (SANGAT PENTING) ---
+.env
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- LOGS & DEBUG ---
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- TESTING & COVERAGE ---
+coverage/
+lib-cov
+.nyc_output
+.eslintcache
+
+# --- MISC / SYSTEM ---
+.DS_Store
+*.pem
+*.tgz
+.grunt
+.lock-wscript
+.node_repl_history
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# --- PRODUCTION BUILDS ---
+build/
+dist/
+build/Release
+
+# --- FIREBASE CONFIG (OPSIONAL) ---
+# Buka tanda pagar di bawah jika Anda ingin orang lain menggunakan project Firebase mereka sendiri
+# .firebaserc
+
+firebase-service-account.json
+.env
