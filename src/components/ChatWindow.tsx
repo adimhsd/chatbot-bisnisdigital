@@ -79,9 +79,9 @@ export default function ChatWindow({ messages }: { messages: Message[] }) {
                       ol: ({ node, ...props }) => (
                         <ol className="list-decimal list-inside my-1 space-y-0.5" {...props} />
                       ),
-                      li: ({ node, ...props }) => <li className="ml-1" {...props} />,
+                      li: ({ node, ...props }) => <li className="ml-1 [&>p]:mb-0" {...props} />,
                       strong: ({ node, ...props }) => (
-                        <strong className="font-bold text-blue-700 dark:text-blue-400" {...props} />
+                        <strong className="font-bold text-gray-900 dark:text-gray-100" {...props} />
                       ),
                       p: ({ node, ...props }) => <p className="mb-1 last:mb-0 leading-snug" {...props} />,
                     }}
