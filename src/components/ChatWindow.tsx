@@ -86,7 +86,8 @@ export default function ChatWindow({ messages }: { messages: Message[] }) {
                       p: ({ node, ...props }) => <p className="mb-1 last:mb-0 leading-snug" {...props} />,
                     }}
                   >
-                    {message.content}
+                    {/* Regex to collapse double newlines before list items to make them tight lists */}
+                    {message.content.replace(/\n\n(?=[-*\d])/g, '\n')}
                   </ReactMarkdown>
                 ) : (
                   message.content
