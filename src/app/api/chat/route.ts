@@ -1,5 +1,5 @@
 import { streamText } from 'ai';
-import { google } from '@ai-sdk/google';
+import { groq } from '@/lib/groq';
 import { retrieveRelevantDocuments, buildRAGContext } from '@/lib/rag';
 import { SYSTEM_PROMPT } from '@/utils/constants';
 
@@ -42,9 +42,9 @@ export async function POST(req: Request) {
 KONTEKS DOKUMEN YANG RELEVAN:
 ${ragContext}`;
 
-    // Use streamText with Google Gemini
+    // Use streamText with Groq (Llama 3)
     const result = await streamText({
-      model: google('gemini-flash-latest'),
+      model: groq('llama-3.3-70b-versatile'),
       system: systemPromptWithContext,
       messages: messages.map((msg) => ({
         role: msg.role as 'user' | 'assistant',
