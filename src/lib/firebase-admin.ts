@@ -1,18 +1,14 @@
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
 
-// Initialize Firebase Admin SDK
 if (!admin.apps.length) {
-  // Make sure to replace this with your actual service account key path
-  const serviceAccount = process.env.FIREBASE_ADMIN_SDK_KEY
-    ? JSON.parse(process.env.FIREBASE_ADMIN_SDK_KEY)
-    : undefined;
-
-  if (serviceAccount) {
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
-  }
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      // Handle newline characters in private key for Vercel/Env vars
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
+  });
 }
 
-export const adminDb = admin.firestore();
-export default admin;
+export { admin };
