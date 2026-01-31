@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   id: string;
@@ -53,14 +53,10 @@ export default function ChatWindow({ messages }: { messages: Message[] }) {
                   }`}
               ></i>
             </div>
-
-            import ReactMarkdown from 'react-markdown';
-
-            // ... (inside the map)
             <div
               className={`max-w-[80%] px-4 py-3 rounded-2xl ${message.role === 'user'
-                  ? 'bg-blue-600 text-white rounded-tr-none'
-                  : 'bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-tl-none border border-gray-200 dark:border-slate-700'
+                ? 'bg-blue-600 text-white rounded-tr-none'
+                : 'bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-tl-none border border-gray-200 dark:border-slate-700'
                 }`}
             >
               <div className="text-sm leading-relaxed whitespace-pre-wrap break-words">
@@ -97,8 +93,8 @@ export default function ChatWindow({ messages }: { messages: Message[] }) {
               </div>
               <p
                 className={`text-xs mt-2 ${message.role === 'user'
-                    ? 'text-blue-100'
-                    : 'text-gray-500 dark:text-gray-400'
+                  ? 'text-blue-100'
+                  : 'text-gray-500 dark:text-gray-400'
                   }`}
               >
                 {new Date(message.timestamp).toLocaleTimeString('id-ID', {
