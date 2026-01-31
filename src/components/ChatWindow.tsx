@@ -65,32 +65,32 @@ export default function ChatWindow({ messages }: { messages: Message[] }) {
                   <ReactMarkdown
                     components={{
                       h1: ({ node, ...props }) => (
-                        <h1 className="text-xl font-bold mt-3 mb-1" {...props} />
+                        <h1 className="text-xl font-bold mt-2 mb-1" {...props} />
                       ),
                       h2: ({ node, ...props }) => (
                         <h2 className="text-lg font-bold mt-2 mb-1" {...props} />
                       ),
                       h3: ({ node, ...props }) => (
-                        <h3 className="text-base font-bold mt-2 mb-1" {...props} />
+                        <h3 className="text-base font-bold mt-1 mb-1" {...props} />
                       ),
                       ul: ({ node, ...props }) => (
-                        <ul className="list-disc list-inside my-1 space-y-0.5" {...props} />
+                        <ul className="list-disc list-inside my-0 space-y-0" {...props} />
                       ),
                       ol: ({ node, ...props }) => (
-                        <ol className="list-decimal list-inside my-1 space-y-0.5" {...props} />
+                        <ol className="list-decimal list-inside my-0 space-y-0" {...props} />
                       ),
-                      li: ({ node, ...props }) => <li className="ml-1 [&>p]:mb-0" {...props} />,
+                      li: ({ node, ...props }) => <li className="ml-1 leading-snug [&>p]:mb-0 [&>p]:inline" {...props} />,
                       strong: ({ node, ...props }) => (
                         <strong className="font-bold text-gray-900 dark:text-gray-100" {...props} />
                       ),
-                      p: ({ node, ...props }) => <p className="mb-1 last:mb-0 leading-snug" {...props} />,
+                      p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-snug" {...props} />,
                     }}
                   >
                     {message.content
                       // Collapse 3+ newlines to max 2 (prevent huge gaps)
                       .replace(/\n{3,}/g, '\n\n')
-                      // Collapse 2+ newlines before list items to 1 (tight lists)
-                      .replace(/\n{2,}(?=[-*] |\d+\.)/g, '\n')}
+                      // Force single newline before any list marker (Markdown, Digit, or Bullet Char) to ensure tight lists
+                      .replace(/\n+(?=[-•*] |\d+\.)/g, '\n')}
                   </ReactMarkdown>
                 ) : (
                   message.content
