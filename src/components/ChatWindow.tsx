@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 interface Message {
@@ -44,8 +45,8 @@ export default function ChatWindow({ messages }: { messages: Message[] }) {
           >
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-white shrink-0 ${message.role === 'user'
-                  ? 'bg-slate-700 dark:bg-slate-600'
-                  : 'bg-blue-600 dark:bg-blue-700'
+                ? 'bg-slate-700 dark:bg-slate-600'
+                : 'bg-blue-600 dark:bg-blue-700'
                 }`}
             >
               <i
@@ -64,25 +65,25 @@ export default function ChatWindow({ messages }: { messages: Message[] }) {
                   <ReactMarkdown
                     components={{
                       h1: ({ node, ...props }) => (
-                        <h1 className="text-xl font-bold mt-4 mb-2" {...props} />
+                        <h1 className="text-xl font-bold mt-3 mb-1" {...props} />
                       ),
                       h2: ({ node, ...props }) => (
-                        <h2 className="text-lg font-bold mt-3 mb-2" {...props} />
+                        <h2 className="text-lg font-bold mt-2 mb-1" {...props} />
                       ),
                       h3: ({ node, ...props }) => (
                         <h3 className="text-base font-bold mt-2 mb-1" {...props} />
                       ),
                       ul: ({ node, ...props }) => (
-                        <ul className="list-disc list-inside my-2 space-y-1" {...props} />
+                        <ul className="list-disc list-inside my-1 space-y-0.5" {...props} />
                       ),
                       ol: ({ node, ...props }) => (
-                        <ol className="list-decimal list-inside my-2 space-y-1" {...props} />
+                        <ol className="list-decimal list-inside my-1 space-y-0.5" {...props} />
                       ),
                       li: ({ node, ...props }) => <li className="ml-1" {...props} />,
                       strong: ({ node, ...props }) => (
                         <strong className="font-bold text-blue-700 dark:text-blue-400" {...props} />
                       ),
-                      p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
+                      p: ({ node, ...props }) => <p className="mb-1 last:mb-0 leading-snug" {...props} />,
                     }}
                   >
                     {message.content}
