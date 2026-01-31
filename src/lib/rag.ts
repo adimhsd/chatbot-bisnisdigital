@@ -1,22 +1,18 @@
 import { db } from './firebase';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
-import { OpenAI } from 'openai';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { google } from '@ai-sdk/google';
+import { embed } from 'ai';
 
 /**
- * Converts a user query to a vector embedding using OpenAI
+ * Converts a user query to a vector embedding using Google Gemini
  */
 export async function queryToEmbedding(query: string): Promise<number[]> {
   try {
-    const response = await openai.embeddings.create({
-      model: 'text-embedding-3-small',
-      input: query,
+    const { embedding } = await embed({
+      model: google.textEmbeddingModel('text-embedding-004'),
+      value: query,
     });
-
-    return response.data[0].embedding;
+    return embedding;
   } catch (error) {
     console.error('Error generating embedding:', error);
     throw new Error('Failed to generate embedding for query');
