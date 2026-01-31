@@ -1,5 +1,4 @@
-import { db } from './firebase';
-import { collection, query, where, limit, getDocs } from 'firebase/firestore';
+import { admin } from './firebase-admin';
 import { google } from '@ai-sdk/google';
 import { embed } from 'ai';
 
@@ -38,14 +37,14 @@ export async function retrieveRelevantDocuments(
     // Get the embedding for the user query
     const queryEmbedding = await queryToEmbedding(userQuery);
 
-    // Query Firestore documents collection
-    const docsRef = collection(db, 'documents');
-    const q = query(
-      docsRef,
-      limit(topK * 2) // Get more docs initially for filtering
-    );
+    // Query Firestore documents collection using Admin SDK
+    const db = admin.firestore();
+    const docsRef = db.collection('documents');
 
-    const querySnapshot = await getDocs(q);
+    // Note: Admin SDK doesn't support limit() in the same way as Client SDK v9 modular
+    // It uses chaining: collection().limit().get()
+    const querySnapshot = await docsRef.limit(topK * 2).get();
+
     const documents: Array<{
       id: string;
       content: string;
