@@ -39,40 +39,67 @@ export default function ChatWindow({ messages }: { messages: Message[] }) {
         messages.map((message) => (
           <div
             key={message.id}
-            className={`flex gap-3 animate-fadeIn ${
-              message.role === 'user' ? 'flex-row-reverse' : ''
-            }`}
+            className={`flex gap-3 animate-fadeIn ${message.role === 'user' ? 'flex-row-reverse' : ''
+              }`}
           >
             <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-white shrink-0 ${
-                message.role === 'user'
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-white shrink-0 ${message.role === 'user'
                   ? 'bg-slate-700 dark:bg-slate-600'
                   : 'bg-blue-600 dark:bg-blue-700'
-              }`}
+                }`}
             >
               <i
-                className={`fas text-xs ${
-                  message.role === 'user' ? 'fa-user' : 'fa-robot'
-                }`}
+                className={`fas text-xs ${message.role === 'user' ? 'fa-user' : 'fa-robot'
+                  }`}
               ></i>
             </div>
 
+            import ReactMarkdown from 'react-markdown';
+
+            // ... (inside the map)
             <div
-              className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                message.role === 'user'
+              className={`max-w-[80%] px-4 py-3 rounded-2xl ${message.role === 'user'
                   ? 'bg-blue-600 text-white rounded-tr-none'
                   : 'bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-tl-none border border-gray-200 dark:border-slate-700'
-              }`}
+                }`}
             >
-              <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
-                {message.content}
-              </p>
+              <div className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+                {message.role === 'assistant' ? (
+                  <ReactMarkdown
+                    components={{
+                      h1: ({ node, ...props }) => (
+                        <h1 className="text-xl font-bold mt-4 mb-2" {...props} />
+                      ),
+                      h2: ({ node, ...props }) => (
+                        <h2 className="text-lg font-bold mt-3 mb-2" {...props} />
+                      ),
+                      h3: ({ node, ...props }) => (
+                        <h3 className="text-base font-bold mt-2 mb-1" {...props} />
+                      ),
+                      ul: ({ node, ...props }) => (
+                        <ul className="list-disc list-inside my-2 space-y-1" {...props} />
+                      ),
+                      ol: ({ node, ...props }) => (
+                        <ol className="list-decimal list-inside my-2 space-y-1" {...props} />
+                      ),
+                      li: ({ node, ...props }) => <li className="ml-1" {...props} />,
+                      strong: ({ node, ...props }) => (
+                        <strong className="font-bold text-blue-700 dark:text-blue-400" {...props} />
+                      ),
+                      p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
+                    }}
+                  >
+                    {message.content}
+                  </ReactMarkdown>
+                ) : (
+                  message.content
+                )}
+              </div>
               <p
-                className={`text-xs mt-2 ${
-                  message.role === 'user'
+                className={`text-xs mt-2 ${message.role === 'user'
                     ? 'text-blue-100'
                     : 'text-gray-500 dark:text-gray-400'
-                }`}
+                  }`}
               >
                 {new Date(message.timestamp).toLocaleTimeString('id-ID', {
                   hour: '2-digit',
