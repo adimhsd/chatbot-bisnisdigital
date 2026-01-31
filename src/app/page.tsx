@@ -1,6 +1,5 @@
-'use client';
-
 import { useChat } from 'ai/react';
+import { Message } from 'ai';
 import ChatWindow from '@/components/ChatWindow';
 import ChatInput from '@/components/ChatInput';
 import Navbar from '@/components/Navbar';
@@ -19,7 +18,7 @@ export default function Home() {
 
   // Map ai/react messages to the format expected by ChatWindow
   // useChat messages have 'createdAt', ChatWindow expects 'timestamp'
-  const uiMessages = messages.map((m) => ({
+  const uiMessages = messages.map((m: Message) => ({
     id: m.id,
     role: m.role as 'user' | 'assistant',
     content: m.content,
