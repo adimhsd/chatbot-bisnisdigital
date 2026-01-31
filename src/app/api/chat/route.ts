@@ -44,7 +44,7 @@ ${ragContext}`;
 
     // Use streamText with Google Gemini
     const result = await streamText({
-      model: google('gemini-1.5-flash'),
+      model: google('gemini-2.0-flash'),
       system: systemPromptWithContext,
       messages: messages.map((msg) => ({
         role: msg.role as 'user' | 'assistant',
